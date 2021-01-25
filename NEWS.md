@@ -1,3 +1,10 @@
+# causact 0.4.0
+
+## Minor improvements and fixes
+
+* Support for using `greta` matrix operations like `%*%` and other `greta` functions within the `rhs` argument of the `dag_node` function has been added.
+* The readme has been updated to include a `mixture` example.
+
 # causact 0.3.3
 
 ## Minor improvements and fixes
