@@ -16,8 +16,8 @@ from R. Future iterations of the `causact` package will aim to be a
 front-end into several universal probablistic programming languages
 (e.g. Stan, Turing, Gen, etc.).
 
-Using the `causact` package for Bayesian inference is featured in `A
-Business Analyst's Introduction to Business Analytics` available at
+Using the `causact` package for Bayesian inference is featured in
+`A Business Analyst's Introduction to Business Analytics` available at
 <https://www.causact.com/>.
 
 > NOTE: Package is under active development. Breaking changes are to be
@@ -118,16 +118,16 @@ drawsDF  ### see top of data frame
 #> # A tibble: 4,000 x 4
 #>    theta_JpWrnglr theta_KiaForte theta_SbrOtbck theta_ToytCrll
 #>             <dbl>          <dbl>          <dbl>          <dbl>
-#>  1          0.854          0.195          0.597          0.191
-#>  2          0.824          0.243          0.628          0.195
-#>  3          0.824          0.243          0.628          0.195
-#>  4          0.855          0.264          0.593          0.202
-#>  5          0.829          0.219          0.594          0.189
-#>  6          0.835          0.262          0.588          0.185
-#>  7          0.857          0.241          0.613          0.210
-#>  8          0.864          0.246          0.610          0.208
-#>  9          0.821          0.229          0.529          0.219
-#> 10          0.834          0.243          0.571          0.239
+#>  1          0.819          0.226          0.593          0.169
+#>  2          0.851          0.214          0.579          0.172
+#>  3          0.883          0.260          0.574          0.207
+#>  4          0.844          0.256          0.575          0.218
+#>  5          0.815          0.275          0.570          0.198
+#>  6          0.784          0.246          0.542          0.215
+#>  7          0.893          0.188          0.673          0.199
+#>  8          0.843          0.162          0.676          0.213
+#>  9          0.825          0.180          0.690          0.212
+#> 10          0.867          0.265          0.534          0.214
 #> # ... with 3,990 more rows
 ```
 
@@ -140,20 +140,17 @@ drawsDF %>% dagp_plot()
 <div class="figure">
 
 <img src="man/figures/gretaPost-1.png" alt="Credible interval plots." width="70%" />
-
 <p class="caption">
-
 Credible interval plots.
-
 </p>
 
 </div>
 
 ## Further Usage
 
-For more info, see `A Business Analyst's Introduction to Business
-Analytics` available at <https://www.causact.com>. Two additional
-examples are shown below.
+For more info, see
+`A Business Analyst's Introduction to Business Analytics` available at
+<https://www.causact.com>. Two additional examples are shown below.
 
 ## Prosocial Chimpanzees Example from Statistical Rethinking
 

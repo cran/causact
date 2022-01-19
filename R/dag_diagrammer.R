@@ -14,7 +14,6 @@
 #'   dag_diagrammer() %>%
 #'   render_graph(title = "DiagrammeR Version of causact_graph")
 #' @importFrom dplyr select filter group_by summarize mutate left_join
-#' @importFrom tidyr replace_na
 #' @importFrom stringr str_replace
 #' @importFrom DiagrammeR create_node_df create_graph add_node_df create_edge_df
 #' @importFrom rlang .data
@@ -83,7 +82,7 @@ dag_diagrammer = function(graph, wrapWidth = 24, shortLabel = FALSE) {
   ###ONLY DO THIS IF NODE NOT ON PLATE###
   nodeDF = nodeDF %>%
     dplyr::left_join(dimLabelDF,by = c("id" = "nodeID")) %>%
-    dplyr::mutate(dimLabel = tidyr::replace_na(dimLabel,"")) %>%
+    dplyr::mutate(dimLabel = ifelse(is.na(dimLabel),"",dimLabel)) %>%
     dplyr::mutate(descLine = paste0(descLine,dimLabel))
 
   ###make the equation line nicely formatted
@@ -213,8 +212,7 @@ dag_diagrammer = function(graph, wrapWidth = 24, shortLabel = FALSE) {
   ### add egdes if applicable
   if (nrow(edgeDF) > 0) {
     ## use dashed for type = extract
-    edgeDF$style = ifelse(edgeDF$type == "extract","dashed","solid") %>%
-      tidyr::replace_na("solid")
+    edgeDF$style = ifelse(edgeDF$type != "extract" | is.na(edgeDF$type),"solid","dashed")
     edgeDF = DiagrammeR::create_edge_df(from = edgeDF$from,
                                         to = edgeDF$to,
                                         style = edgeDF$style)
