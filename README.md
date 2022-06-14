@@ -1,5 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/flyaflya/causact/workflows/R-CMD-check/badge.svg)](https://github.com/flyaflya/causact/actions)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/causact)](https://cran.r-project.org/package=causact)
+[![Codecov test
+coverage](https://codecov.io/gh/flyaflya/causact/branch/master/graph/badge.svg)](https://app.codecov.io/gh/flyaflya/causact?branch=master)
+[![Lifecycle:Maturing](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)
+<!-- badges: end -->
 
 # causact
 
@@ -20,9 +29,8 @@ Using the `causact` package for Bayesian inference is featured in
 `A Business Analyst's Introduction to Business Analytics` available at
 <https://www.causact.com/>.
 
-> NOTE: Package is under active development. Breaking changes are to be
-> expected. Feedback and encouragement is appreciated via github issues
-> or Twitter (<https://twitter.com/preposterior>).
+> Feedback and encouragement is appreciated via github issues or Twitter
+> (<https://twitter.com/preposterior>).
 
 ## Installation
 
@@ -118,16 +126,16 @@ drawsDF  ### see top of data frame
 #> # A tibble: 4,000 x 4
 #>    theta_JpWrnglr theta_KiaForte theta_SbrOtbck theta_ToytCrll
 #>             <dbl>          <dbl>          <dbl>          <dbl>
-#>  1          0.819          0.226          0.593          0.169
-#>  2          0.851          0.214          0.579          0.172
-#>  3          0.883          0.260          0.574          0.207
-#>  4          0.844          0.256          0.575          0.218
-#>  5          0.815          0.275          0.570          0.198
-#>  6          0.784          0.246          0.542          0.215
-#>  7          0.893          0.188          0.673          0.199
-#>  8          0.843          0.162          0.676          0.213
-#>  9          0.825          0.180          0.690          0.212
-#> 10          0.867          0.265          0.534          0.214
+#>  1          0.878          0.219          0.560          0.211
+#>  2          0.839          0.296          0.660          0.227
+#>  3          0.840          0.229          0.571          0.209
+#>  4          0.864          0.175          0.669          0.199
+#>  5          0.809          0.307          0.537          0.204
+#>  6          0.823          0.269          0.593          0.203
+#>  7          0.865          0.178          0.644          0.204
+#>  8          0.879          0.274          0.555          0.197
+#>  9          0.849          0.189          0.623          0.230
+#> 10          0.817          0.231          0.577          0.180
 #> # ... with 3,990 more rows
 ```
 
@@ -146,11 +154,35 @@ Credible interval plots.
 
 </div>
 
+## Getting Help and Suggesting Improvements
+
+Whether you encounter a clear bug, have a suggestion for improvement, or
+just have a question, we are thrilled to help you out. In all cases,
+please file a [GitHub
+issue](https://github.com/flyaflya/causact/issues). If reporting a bug,
+please include a minimal reproducible example. If encountering issues
+installing `greta`, please seek help at the [greta discussion
+forum](https://forum.greta-stats.org/).
+
+## Contributing
+
+We welcome help turning `causact` into the most intuitive and fastest
+method of converting stakeholder narratives about data-generating
+processes into actionable insight from posterior distributions. If you
+want to help us achieve this vision, we welcome your contributions after
+reading the [new contributor
+guide](https://github.com/flyaflya/causact/blob/master/.github/contributing.md).
+Please note that this project is released with a [Contributor Code of
+Conduct](https://github.com/flyaflya/causact/blob/master/CODE_OF_CONDUCT.md).
+By participating in this project you agree to abide by its terms.
+
 ## Further Usage
 
 For more info, see
 `A Business Analyst's Introduction to Business Analytics` available at
-<https://www.causact.com>. Two additional examples are shown below.
+<https://www.causact.com>. You can also check out the package’s
+vignette: `vignette("narrative-to-insight-with-causact")`. Two
+additional examples are shown below.
 
 ## Prosocial Chimpanzees Example from Statistical Rethinking
 
