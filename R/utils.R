@@ -1,6 +1,7 @@
 #' @importFrom forcats fct_relevel
 #' @importFrom stringr str_sort str_detect
-#' @importFrom rlang ensym as_name call_standardise
+#' @importFrom rlang ensym as_name get_expr set_expr is_primitive eval_bare get_env node_car is_call
+#' @importFrom dplyr bind_rows tibble left_join rowwise select add_row as_tibble group_indices row_number mutate filter join_by
 #### assume RHS is a distribution
 #### if distribution, isolate distribution name,
 #### parameter names/values, and argument names/values
@@ -61,13 +62,13 @@ rhsDecompDistr = function(rhs) {
       distString[2:length(distString)]
   }
 
-  ## sort based on standard parameter ordering for greta
+  ## sort based on standard parameter ordering
   allArgsDF = data.frame(argName = allArgs, stringsAsFactors = FALSE) %>%
     dplyr::left_join(namedArgDF, by = "argName") %>%
     dplyr::select(-position)
   rm(namedArgDF)
 
-  ## for all greta distributions, one of the below words signals
+  ## for all distributions, one of the below words signals
   ## the transition from parameter arguments to other arguments
   numParents = min(which(allArgs %in% c("dim", "dimension", "n_realisations"))) - 1  ## get number of dist paramaters
   if(rlang::is_empty(numParents)){ numParents = nrow(allArgsDF) }  ## some distributions are missing dim argument, so assume (for now) all arguments are parameters
@@ -124,47 +125,47 @@ rhsDecompFormula = function(rhs) {
   return(z)
 }
 
-rhsDecompMixJointDistr = function(rhs) {
-  ## read in expression as a quosure
-  distExpr = rlang::enexpr(rhs)
-  distString = as.character(distExpr)
-
-  ## create data frame of named arguments and their position
-  namedArgDF = data.frame(
-    position = as.integer(NA),
-    argName = as.character(NA),
-    argValue = as.character(NA),
-    stringsAsFactors = FALSE
-  )[-1, ]
-
-  ## get top function name (note: this assumes namespace is stripped)
-  fnName = rlang::call_name(distExpr)
-
-  ## get params (i.e. dists passed via ... to mix)
-  ## and non-param arguments like dim as list
-  argList = as.list(rlang::call_standardise(distExpr)[-1])
-  argNames = names(argList)
-  argValues = as.character(argList)
-
-  paramIndices = which(names(argList)=="")
-  argIndices = which(!(names(argList)==""))
-
-  argDF = data.frame(argName = argNames[argIndices],
-                       argValue = argValues[argIndices],
-                       stringsAsFactors = FALSE)
-
-  paramDF = data.frame(argName = argValues[paramIndices],
-                       argValue = argValues[paramIndices],
-                       stringsAsFactors = FALSE)
-
-  z = list(
-    distr = TRUE,
-    fcn = fnName,
-    paramDF = paramDF,
-    argDF = argDF
-  )
-  return(z)
-}
+# rhsDecompMixJointDistr = function(rhs) {
+#   ## read in expression as a quosure
+#   distExpr = rlang::enexpr(rhs)
+#   distString = as.character(distExpr)
+#
+#   ## create data frame of named arguments and their position
+#   namedArgDF = data.frame(
+#     position = as.integer(NA),
+#     argName = as.character(NA),
+#     argValue = as.character(NA),
+#     stringsAsFactors = FALSE
+#   )[-1, ]
+#
+#   ## get top function name (note: this assumes namespace is stripped)
+#   fnName = rlang::call_name(distExpr)
+#
+#   ## get params (i.e. dists passed via ... to mix)
+#   ## and non-param arguments like dim as list
+#   argList = as.list(call_standardize(distExpr)[-1])
+#   argNames = names(argList)
+#   argValues = as.character(argList)
+#
+#   paramIndices = which(names(argList)=="")
+#   argIndices = which(!(names(argList)==""))
+#
+#   argDF = data.frame(argName = argNames[argIndices],
+#                        argValue = argValues[argIndices],
+#                        stringsAsFactors = FALSE)
+#
+#   paramDF = data.frame(argName = argValues[paramIndices],
+#                        argValue = argValues[paramIndices],
+#                        stringsAsFactors = FALSE)
+#
+#   z = list(
+#     distr = TRUE,
+#     fcn = fnName,
+#     paramDF = paramDF,
+#     argDF = argDF
+#   )
+#   return(z)
+# }
 
 
 ### function to decompose rhs argument
@@ -176,27 +177,27 @@ rhsDecomp = function(rhs) {
   simpleRHS = FALSE  ## assume complex expression
 
   ## handle cases where just distribution name is supplied
-  ## if function in greta namespace, then assume distr
-  notDistrFunctions = c("%*%","eigen","iprobit","ilogit","colMeans","apply","abind","icloglog","icauchit","log1pe","imultilogit","zeros","ones","greta_array","as_data","icloglog","icauchit","log1pe","imultlogit")
+  ## if function in causact namespace other than below, assume distr
+  notDistrFunctions = c("%*%","eigen","iprobit","ilogit","colMeans","apply","abind","icloglog","icauchit","log1pe","imultilogit","zeros","ones","as_data","icloglog","icauchit","log1pe","imultlogit")
 
   if (is.symbol(distExpr)) {
     fnName = rlang::as_string(distExpr)
-    if (fnName %in% getNamespaceExports("greta") &
+    if (fnName %in% getNamespaceExports("causact") &
         !(fnName %in% notDistrFunctions)) {
-      ## it is a greta distribution - add parantheses so not symbol
+      ## it is a causact distribution - add parantheses so not symbol
       distExpr = rlang::parse_expr(paste0(fnName, "()"))
     } else {
       distExpr = rlang::parse_expr(fnName)
-      if (!(fnName %in% getNamespaceExports("greta") &
+      if (!(fnName %in% getNamespaceExports("causact") &
           !(fnName %in% notDistrFunctions))) {
       simpleRHS = TRUE } ##expression is not complex
     }
   }
 
-  ## handle cases where greta namespace is used
+  ## handle cases where namespace is used
   distString = rlang::expr_text(distExpr)
-  if (startsWith(distString,"greta::")) {
-    distString = gsub("greta::","",distString)
+  if (startsWith(distString,"causact::")) {
+    distString = gsub("causact::","",distString)
     distExpr = rlang::parse_expr(distString)
     if(is.symbol(distExpr)) {  ## if now symbol, add parantheses
       distExpr = rlang::parse_expr(paste0(rlang::as_string(distExpr),"()"))
@@ -209,18 +210,14 @@ rhsDecomp = function(rhs) {
     fnName = NA}
 
   ## standardize the call
-  if(!simpleRHS) {distExpr = rlang::call_standardise(distExpr)}
+  if(!simpleRHS) {distExpr = call_standardize(distExpr)}
 
   ## return function name
   if(!simpleRHS) {fnName = rlang::call_name(distExpr)}
 
-  if (fnName %in% getNamespaceExports("greta") &
+  if (fnName %in% getNamespaceExports("causact") &
       !(fnName %in% notDistrFunctions)) {
-    if (fnName %in% c("mixture","joint")) {
-      z = rhsDecompMixJointDistr(!!distExpr)
-      } else {  ##standard distribution
         z = rhsDecompDistr(!!distExpr)
-      }
   } else {
     z = rhsDecompFormula(!!distExpr)
   }
@@ -231,7 +228,7 @@ rhsDecomp = function(rhs) {
 
 # ##testing code
 # tmp(normal)
-# tmp(greta::normal)
+# tmp(causact::normal)
 # tmp(normal(mean = 2, sd = 3))
 # tmp(normal(
 #   mean = 2,
@@ -252,43 +249,44 @@ rhsPriorComposition = function(graph) {
   ## get nodes which have prior information
   nodeDF = graph$nodes_df %>%
     dplyr::filter(distr == TRUE) %>%
-    select(.data$id,rhs,rhsID)
+    dplyr::select("id",rhs,rhsID)
 
   ## retrieve non-NA argument list
   argDF = graph$arg_df %>%
     dplyr::filter(!is.na(argValue))
 
   ## get plate information for dim argument of priors
-  plateDimDF = graph$plate_index_df %>%
-    dplyr::filter(!is.na(dataNode)) %>% ##only plates with data
-    dplyr::left_join(graph$plate_node_df, by = "indexID") %>%
+  graphWithDim = graph %>% dag_dim()
+  plateDimDF = graphWithDim$dim_df %>%
+    dplyr::select(nodeID,dimType,indexLabel=dimLabel)
+  if (NROW(plateDimDF %>% filter(dimType == "plate"))>0){
+    plateDimDF =
+      getPlateStatements(graphWithDim)
+  }
+  plateDimDF = plateDimDF  %>%
     dplyr::select(nodeID,indexLabel)
 
   ## create label for the rhs for these nodes
   auto_rhsDF = nodeDF %>% dplyr::left_join(argDF, by = "rhsID") %>%
     dplyr::mutate(argValue = ifelse(is.na(argDimLabels),argValue,
                                     paste0(argValue,"[",
-                                           ifelse(stringr::str_detect(argDimLabels,","),
-                                                  paste0("cbind(", argDimLabels,")"),
-                                                  argDimLabels),  ## use cbind for R indexing
+                                           argDimLabels,
                                            "]"))) %>% ## add extraction index to label
     dplyr::group_by(.data$id,rhsID,rhs) %>%
-    dplyr::summarize(args = paste0(argName," = ",argValue,collapse = ", ")) %>%
+    dplyr::summarize(args = paste0(argName," = ",argValue,collapse = ", "), .groups = "drop_last") %>%
     dplyr::left_join(plateDimDF, by = c("id" = "nodeID")) %>%
     dplyr::mutate(indexLabel = ifelse(is.na(indexLabel) | indexLabel == "NA","",indexLabel)) %>%
-    dplyr::mutate(indexLabel = ifelse(indexLabel == "","",paste0(indexLabel,"_dim"))) %>%
+    #dplyr::mutate(indexLabel = ifelse(indexLabel == "","",paste0(indexLabel,"_dim"))) %>%
     dplyr::group_by(.data$id,rhsID,rhs,args) %>%
-    dplyr::summarize(indexLabel = paste0(indexLabel, collapse = ",")) %>%
+    dplyr::summarize(indexLabel = paste0(indexLabel, collapse = ","), .groups = "drop_last") %>%
     dplyr::mutate(indexLabel = ifelse(stringr::str_detect(indexLabel,","),
                                       paste0("c(",indexLabel,")"),
                                       indexLabel)) %>%
     dplyr::mutate(indexLabel = ifelse(indexLabel == "",as.character(NA),indexLabel)) %>%
     dplyr::mutate(prior_rhs = paste0(rhs,"(",args,
-                                    ifelse(is.na(indexLabel),"",
-                                           paste0(", dim = ",indexLabel)),
                                     ")")) %>%
     dplyr::ungroup() %>%
-    select(.data$id,prior_rhs)
+    select("id",prior_rhs)
 
   ##update graph with new label
   graph$nodes_df = graph$nodes_df %>% left_join(auto_rhsDF, by = "id") %>%
@@ -592,7 +590,7 @@ updateExtractArguments = function(graphWithDim) {
       dplyr::group_by(rhsID, argName, argType, argValue) %>%
       dplyr::summarize(
         argDimLabels = paste0(argDimLabels, collapse = ","),
-        minRowID = min(argID)
+        minRowID = min(argID), .groups = "drop_last"
       ) %>%
       dplyr::mutate(argDimLabels = gsub("NA,", "", argDimLabels)) %>%
       dplyr::mutate(argDimLabels = ifelse(argDimLabels == "NA", as.character(NA), argDimLabels)) %>%
@@ -618,21 +616,8 @@ getLevelNames = function(dataNode) {
 }
 
 
-##function to make diagonal matrix given vector of diagonal elements
-makeDiagMatrix = function(diagVec) {
-
-    #if (!is.vector(diagVec)) {stop("Need to input vector to makeDiagMatrix()")}
-
-    lengthDiag <- length(diagVec)
-    diagMatrix = greta::zeros(lengthDiag,lengthDiag)
-    i <- seq_len(lengthDiag)
-    diagMatrix[cbind(i, i)] <- diagVec
-    return(diagMatrix)
-  }
-
 # below two functions allow one to get objectName
-# that becomes argument in meaningfulLabels()
-# when using dag_greta(mcmc=FALSE)
+# that becomes argument
 # see https://michaelbarrowman.co.uk/post/getting-a-variable-name-in-a-pipeline/
 get_lhs <- function(){
   calls <- sys.calls()
@@ -671,4 +656,128 @@ get_name <- function(x){
     rlang::as_name(lhs)
 }
 
+## take this function from rlang as they are deprecating it
+## change from standardise to standardize
+call_standardize <- function(call, env = caller_env()) {
+
+  expr <- rlang::get_expr(call)
+  if (!is_call(expr)) {
+    abort_call_input_type("call")
+  }
+
+  # The call name might be a literal, not necessarily a symbol
+  env <- rlang::get_env(call, env)
+  fn <- rlang::eval_bare(rlang::node_car(expr), env)
+
+  if (rlang::is_primitive(fn)) {
+    call
+  } else {
+    matched <- match.call(fn, expr)
+    rlang::set_expr(call, matched)
+  }
+}
+
+## adapted from rlang - avoid using cli like rlang does
+.style_inline <- function(x, span, fallback = "`%s`") {
+  if (is.null(fallback)) {
+    x
+  } else if (is.function(fallback)) {
+    fallback(x)
+  } else {
+    sprintf(fallback, x)
+  }
+}
+.format_inline <- function(x, span, fallback = "`%s`") {
+    .style_inline(x, span, fallback = fallback)
+}
+format_arg    <- function(x) .format_inline(x, "arg", "`%s`")
+abort_call_input_type <- function(arg, call = caller_env()) {
+  abort(
+    sprintf("%s must be a quoted call.", format_arg(arg)),
+    call = call
+  )
+}
+
+## install utility function
+#' Check if 'r-causact' Conda environment exists
+check_r_causact_env <- function() {
+  tryCatch({
+    env_list <- reticulate::conda_list()
+    result <- "r-causact" %in% env_list$name
+  }, error = function(e) {
+    result <- FALSE
+  })
+}
+
+# Function to replace 'c(' with 'concatenate(atleast_1d(' and ')' with '))'
+replace_c <- function(input_string) {
+  pattern <- "(^|\\s)c\\((.*?)\\)"
+  replacement <- "\\1concatenate(atleast_1d(\\2))"
+  modified_string <- gsub(pattern, replacement, input_string, perl = TRUE)
+  return(modified_string)
+}
+
+# Replace periods with an alternative character (e.g., underscore)
+make_unique_No_periods <- function(vec) {
+  vec[is.na(vec)] <- "NA_placeholder"
+  unique_names <- make.names(vec, unique = TRUE)
+  unique_names <- gsub("\\.", "_", unique_names)
+  unique_names[unique_names == "NA_placeholder"] <- NA
+  return(unique_names)
+}
+
+## getNumpyro plate statements and index labels for nodes
+getPlateStatements = function(graphWithDim) {
+  dimNum <- id <- plateLabelState <- plateState <- selStmnt <- varNameStmnt <- NULL
+  dim_DF = graphWithDim$dim_df
+  nodeDF = graphWithDim$nodes_df
+  addNonSummarizedPlateStatesDF = dim_DF %>%
+    dplyr::filter(dimType == "plate") %>%
+    dplyr::select(nodeID, dimLabel) %>%
+    ## do alphabetical order
+    dplyr::arrange(nodeID, dimLabel) %>%
+    group_by(nodeID) %>%
+    dplyr::mutate(dimNum = row_number(),
+           plateState = paste0(strrep("\t",dimNum),
+                               "with npo.plate('",
+                               dimLabel,"_dim","',",
+                               dimLabel,"_dim):\n"),
+           plateLabelState = paste0(strrep("\t",dimNum-1),
+                               "for ",
+                               dimLabel,"_da in drawsDS['",
+                               dimLabel,"_dim']:\n"),
+           varNameStmnt = paste0("{",dimLabel,"_da.values","}"),
+           selStmnt = paste0(dimLabel,"_dim = ",dimLabel,"_da"))
+  ## do not pass empty df to avoid error
+  if (NROW(addNonSummarizedPlateStatesDF) > 0) {
+    plateStatesDF =
+    addNonSummarizedPlateStatesDF %>%
+    summarize(nodeID = dplyr::first(nodeID),
+              plateStmnt = paste0(plateState,
+                                  collapse = ""),
+              numTabsForNode = max(dimNum) + 1,
+              indexLabel = paste0("[",
+                                  paste0(dimLabel, collapse = ","),
+                                  "]"),
+              plateLabelling = paste0(plateLabelState,
+                                  collapse = ""),
+              varLabelling = paste0(varNameStmnt,
+                                    collapse = "_"),
+              selLabelling = paste0(selStmnt,
+                                    collapse = ",")) %>%
+    left_join(nodeDF %>% select(id,auto_label), by = join_by(nodeID == id))} else {
+      plateStatesDF =
+        addNonSummarizedPlateStatesDF %>%
+        dplyr::summarize(nodeID = as.integer(NA),
+                  plateStmnt = as.character(NA),
+                  numTabsForNode = as.integer(NA),
+                  indexLabel = as.character(NA),
+                  plateLabelling = as.character(NA),
+                  varLabelling = as.character(NA),
+                  selLabelling = as.character(NA)) %>%
+        dplyr::left_join(nodeDF %>% select(id,auto_label), by = join_by(nodeID == id))
+    }
+
+  return(plateStatesDF)
+}
 

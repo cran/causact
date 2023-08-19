@@ -24,11 +24,14 @@ If \code{mcmc=TRUE}, returns a dataframe of posterior distribution samples corre
 }
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}
+
+This function is currently defunct.  It has been superseded by \code{dag_numpyro()} because of tricky and sometimes unresolvable installation issues related to the greta package's use of tensorflow.  If the greta package resolves those issues, this function may return, but please use \code{dag_numpyro()} as a direct replacement.
 
 Generate a representative sample of the posterior distribution.  The input graph object should be of class \code{causact_graph} and created using \code{dag_create()}.  The specification of a completely consistent joint distribution is left to the user.  Helpful error messages are scheduled for future versions of the \code{causact} package.
 }
 \examples{
+\dontrun{
 library(greta)
 graph = dag_create() \%>\%
   dag_node("Get Card","y",
@@ -46,7 +49,6 @@ graph = dag_create() \%>\%
 
 graph \%>\% dag_render()
 gretaCode = graph \%>\% dag_greta(mcmc=FALSE)
-\dontrun{
 ## default functionality returns a data frame
 # below requires Tensorflow installation
 drawsDF = graph \%>\% dag_greta()

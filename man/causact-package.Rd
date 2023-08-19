@@ -4,9 +4,9 @@
 \name{causact-package}
 \alias{causact}
 \alias{causact-package}
-\title{causact: Accelerated Bayesian Analytics with DAGs}
+\title{causact: Fast, Easy, and Visual Bayesian Inference}
 \description{
-Accelerate Bayesian analytics workflows in 'R' through interactive modelling, visualization, and inference. Define probabilistic graphical models using directed acyclic graphs (DAGs) as a unifying language for business stakeholders, statisticians, and programmers. This package relies on the sleek and elegant 'greta' package for Bayesian inference. 'greta', in turn, is an interface into 'TensorFlow' from 'R'. Install 'greta' using instructions available here: <https://www.causact.com/install-tensorflow-greta-and-causact.html>. See <https://github.com/flyaflya/causact> or <https://www.causact.com/> for more documentation.
+Accelerate Bayesian analytics workflows in 'R' through interactive modelling, visualization, and inference. Define probabilistic graphical models using directed acyclic graphs (DAGs) as a unifying language for business stakeholders, statisticians, and programmers. This package relies on interfacing with the 'numpyro' python package.
 }
 \seealso{
 Useful links:

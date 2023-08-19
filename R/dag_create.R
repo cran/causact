@@ -9,6 +9,7 @@
 #' # view the graph with `dag_render()`.
 #' dag_create()
 #' @return a list object of class `causact_graph` consisting of 6 dataframes.  Each data frame is responsible for storing information about nodes, edges, plates, and the relationships among them.
+#' @importFrom lifecycle badge
 #' @export
 
 dag_create <- function() {
@@ -56,15 +57,6 @@ dag_create <- function() {
       type = as.character(NA),
       stringsAsFactors = FALSE
     )[-1, ]
-
-  # Add custom attributes for DAG building
-  # graph$nodes_df$description[-1] = as.character(NA)
-  # graph$nodes_df$distr[-1] = as.character(NA)
-  # graph$nodes_df$formulaString[-1] = as.character(NA)
-  # graph$nodes_df$fullDistLabel[-1] = as.character(NA)
-  # graph$nodes_df$data[-1] = as.character(NA)
-  # graph$nodes_df$userSpecifiedArgs[-1] = as.logical(NA)
-  # graph$nodes_df$gretaRHS[-1] = as.character(NA)
 
   ## add two df's to store plate index information
   # Create an empty index data frame (`idf`)

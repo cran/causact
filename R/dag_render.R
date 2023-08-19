@@ -9,6 +9,8 @@
 #' @param wrapWidth a numeric value.  Used to restrict width of nodes.  Default is wrap text after 24 characters.
 #' @param width a numeric value.  an optional parameter for specifying the width of the resulting graphic in pixels.
 #' @param height a numeric value.  an optional parameter for specifying the height of the resulting graphic in pixels.
+#' @param fillColor a valid R color to be used as the default node fill color during `dag_render()`.
+#' @param fillColorObs a valid R color to be used as the fill color for observed nodes during `dag_render()`.
 #' @examples
 #' # Render a simple graph
 #' dag_create() %>%
@@ -24,13 +26,16 @@
 #' @importFrom dplyr select rename mutate filter left_join
 #' @importFrom dplyr case_when as_tibble as_data_frame
 #' @return Returns an object of class `grViz` and `htmlwidget` that is also rendered in the RStudio viewer for interactive buidling of graphical models.
+#' @importFrom lifecycle badge
 #' @export
 
 dag_render <- function(graph,
                        shortLabel = FALSE,
                        wrapWidth = 24,
                        width = NULL,
-                       height = NULL) {
+                       height = NULL,
+                       fillColor = "aliceblue",
+                       fillColorObs = "cadetblue") {
 
   ## First validate that the first argument is indeed a causact_graph
   class_g <- class(graph)
@@ -61,12 +66,12 @@ dag_render <- function(graph,
   }
 
   dot_code = graph %>%
-    dag_diagrammer(shortLabel = sLabel, wrapWidth = ww) %>%
-    generate_dot2()
+    dag_diagrammer(shortLabel = sLabel, wrapWidth = ww, fillColor = fillColor, fillColorObs = fillColorObs) %>%
+    DiagrammeR::generate_dot()
 
   # Generate a `grViz` object
   grVizObject <-
-    grViz2(
+    DiagrammeR::grViz(
       diagram = dot_code,
       width = width,
       height = height)
