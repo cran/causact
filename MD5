@@ -1,7 +1,7 @@
-087b306f4a9197ef4914685905aa32c4 *DESCRIPTION
+8df0d834a97475aea6769c27e8f9485d *DESCRIPTION
 2964505d2e89f75b5f3b309abc0c5fb0 *LICENSE
 f1ae2183d023717d2c85dc95ae539b06 *NAMESPACE
-07663fc0ee4c7e35f32f3b9de5457678 *NEWS.md
+9102401e646f889d17ca5991f205c8cf *NEWS.md
 1cf0156cca8af138134bd7f8bda7d530 *R/addPlateDataNode.R
 5f45c7b15fbac7d2fe19d3f92cba44ca *R/addPriorGroups.R
 e62986802dfe7d47a40c096edd235b80 *R/autoLabel.R
@@ -24,10 +24,10 @@ c340493e0c4d824ef048a398a278e5c9 *R/globals.R
 6b27fddecf0494f20458f228f5541570 *R/install_causact_deps.R
 6b7af66fcd2b70536aa90618eb042771 *R/meaningfulLabels.R
 0ef49928e53c28e5edb1b6bbfd43ff38 *R/pipe.R
-aa78d70339e86de7877c6c61e7656f60 *R/probability_distributions.R
+bc5a66594aec98b4d098895cf048bb4f *R/probability_distributions.R
 2ac1cb5a5408395537da2805f75db63b *R/setWorkflowDefaults.R
-2eb1c4897e3e1b37e73dbb9a2c298c3b *R/utils.R
-d541085f70c6d3c2d62f544f8535f6b3 *README.md
+0216ede8fb686a679e9685a3496dcdc7 *R/utils.R
+8bc3ba17f2e42e7f55db38c3f4a04b02 *README.md
 9b2136fded3ab0c21c214e673fc895ba *build/vignette.rds
 bab8344a82ad44a8c2e434903dfba219 *data/baseballData.rda
 dbc41f9065421d2ddd2571f3ccf0dd72 *data/beachLocDF.rda
@@ -74,7 +74,7 @@ c7f02cfa23cd4d0e6d92b6c16689698b *man/figures/causactDemo.gif
 07e45867295f2f6b26ac27fa252fb206 *man/figures/chimpsGraphPost-1.png
 54d085f4efb9514b53748bf693a973db *man/figures/eightSchoolStat.png
 d723b0921d3f8dc2137ec377f2c51374 *man/figures/eightschoolsGraphPost-1.png
-71f3c4dedf5e060055618b2cbfb63eff *man/figures/gretaPost-1.png
+dfa8c22129afbc88f0c7b7f554d58778 *man/figures/gretaPost-1.png
 d0806880cdd0377bf5f23ce64e4e7531 *man/figures/introScreenshot.png
 cb1e46f469cfbbbde29c8b5113e1d789 *man/figures/lifecycle-archived.svg
 c0d2e5a54f1fa4ff02bf9533079dd1f7 *man/figures/lifecycle-defunct.svg

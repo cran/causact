@@ -1,7 +1,7 @@
 Package: causact
 Type: Package
 Title: Fast, Easy, and Visual Bayesian Inference
-Version: 0.5.2
+Version: 0.5.3
 Authors@R: c(person("Adam", "Fleischhacker", email = "ajf@udel.edu", role = c("aut", "cre","cph")),
     person("Daniela", "Dapena", role = "ctb"),
     person("Rose", "Nguyen", role = "ctb"),
@@ -35,11 +35,11 @@ Config/reticulate: list( packages = list( list(package = "jax[cpu]",
         pip = TRUE), list(package = "numpyro[cpu]", pip = TRUE),
         list(package = "arviz", pip = TRUE) ) )
 NeedsCompilation: no
-Packaged: 2023-08-19 12:56:38 UTC; ajf
+Packaged: 2023-09-05 19:15:31 UTC; ajf
 Author: Adam Fleischhacker [aut, cre, cph],
   Daniela Dapena [ctb],
   Rose Nguyen [ctb],
   Jared Sharpe [ctb]
 Maintainer: Adam Fleischhacker <ajf@udel.edu>
 Repository: CRAN
-Date/Publication: 2023-08-19 13:22:32 UTC
+Date/Publication: 2023-09-05 19:50:25 UTC
