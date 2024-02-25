@@ -1,3 +1,6 @@
+# causact 0.5.4
+* patch release to fix installation issues. The default installation workflow now uses `numpyro==0.13.2` to avoid `ModuleNotFoundError: No module named 'jax.linear_util'`.
+
 # causact 0.5.3
 * Fixed bug where beta distribution was being treated as Laplace distribution.
 * Fixed bug where nested plated were being indexed incorrectly in Python.

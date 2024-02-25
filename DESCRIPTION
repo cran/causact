@@ -1,7 +1,7 @@
 Package: causact
 Type: Package
 Title: Fast, Easy, and Visual Bayesian Inference
-Version: 0.5.3
+Version: 0.5.4
 Authors@R: c(person("Adam", "Fleischhacker", email = "ajf@udel.edu", role = c("aut", "cre","cph")),
     person("Daniela", "Dapena", role = "ctb"),
     person("Rose", "Nguyen", role = "ctb"),
@@ -28,18 +28,19 @@ Imports: DiagrammeR (>= 1.0.9), dplyr (>= 1.0.8), magrittr (>= 1.5),
         1.1.0), forcats (>= 0.5.0), rstudioapi (>= 0.11), lifecycle (>=
         1.0.2), reticulate (>= 1.30)
 RoxygenNote: 7.2.3
-Suggests: knitr, covr, testthat (>= 3.0.0), rmarkdown
+Suggests: knitr, covr, testthat (>= 3.0.0), rmarkdown, extraDistr,
+        mvtnorm
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Config/reticulate: list( packages = list( list(package = "jax[cpu]",
         pip = TRUE), list(package = "numpyro[cpu]", pip = TRUE),
         list(package = "arviz", pip = TRUE) ) )
 NeedsCompilation: no
-Packaged: 2023-09-05 19:15:31 UTC; ajf
+Packaged: 2024-02-25 01:23:05 UTC; ajf
 Author: Adam Fleischhacker [aut, cre, cph],
   Daniela Dapena [ctb],
   Rose Nguyen [ctb],
   Jared Sharpe [ctb]
 Maintainer: Adam Fleischhacker <ajf@udel.edu>
 Repository: CRAN
-Date/Publication: 2023-09-05 19:50:25 UTC
+Date/Publication: 2024-02-25 03:10:02 UTC

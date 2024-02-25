@@ -45,7 +45,7 @@ dag_numpyro <- function(graph,
                       mcmc = TRUE,
                       num_warmup = 1000,
                       num_samples = 4000,
-                      seed = 111) {
+                      seed = 1234567) {
 
   ## make sure reticulate autoconfigure is disabled when running this function - I do not think this is needed
   # ac_flag <- Sys.getenv("RETICULATE_AUTOCONFIGURE")
@@ -224,9 +224,9 @@ from jax.numpy import (exp, log, log1p, expm1, abs, mean,
       plateDataStatements = paste(paste0(
         abbrevLabelPad(paste0(plateDimDF$indexLabel)),# four spaces to have invis _dim
                               " = ",
-                              "pd.factorize(r.",
+                              "pd.factorize(np.array(r.",
         gsub("\\$", ".", plateDimDF$dataPy),
-                              ",use_na_sentinel=True)[0]   #DIM"),
+                              "),use_na_sentinel=True)[0]   #DIM"),
                               sep = "\n")
     ###make labels for dim variables = to label_dim
       dimStatements = paste(
@@ -240,9 +240,9 @@ from jax.numpy import (exp, log, log1p, expm1, abs, mean,
       coordLabelsStatements = paste(paste0(
       abbrevLabelPad(paste0(plateDimDF$indexLabel,"_crd")),# four spaces to have invis _dim
       " = ",
-      "pd.factorize(r.",
+      "pd.factorize(np.array(r.",
       gsub("\\$", ".", plateDimDF$dataPy),
-      ",use_na_sentinel=True)[1]   #DIM"),
+      "),use_na_sentinel=True)[1]   #DIM"),
 sep = "\n")
       functionArguments = paste(c(functionArguments,
                                 plateDimDF$indexLabel),
